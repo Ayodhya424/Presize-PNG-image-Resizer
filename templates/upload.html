@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Upload and Resize</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0); /* Decorative gradient background */
+        }
+
+        /* Form container styling */
+        .form-container {
+            background: #ffffff;
+            border: 3px solid #ff6f61;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Header */
+        .form-container h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Input and select field styles */
+        .form-container input,
+        .form-container select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Invalid input styles */
+        .invalid {
+            border-color: red;
+            background-color: #ffcccc;
+        }
+
+        /* Live feedback message styles */
+        .feedback {
+            font-size: 14px;
+            color: red;
+            margin-bottom: 15px;
+            display: none; /* Initially hidden */
+        }
+
+        /* Button styles */
+        .form-container button {
+            background-color: #ff6f61;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background-color: #e0554f;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+    <script>
+        // Define maximum limits
+        const MAX_WIDTH = 1920;
+        const MAX_HEIGHT = 1080;
+        const MAX_SIZE_KB = 2000;
+
+        // Attach event listeners to input fields
+        document.addEventListener('DOMContentLoaded', () => {
+            const widthInput = document.getElementById('width');
+            const heightInput = document.getElementById('height');
+            const sizeInput = document.getElementById('target_size');
+
+            const widthFeedback = document.getElementById('width-feedback');
+            const heightFeedback = document.getElementById('height-feedback');
+            const sizeFeedback = document.getElementById('size-feedback');
+
+            // Function to validate and provide feedback
+            const validateInput = (input, maxValue, feedback) => {
+                if (input.value > maxValue) {
+                    input.classList.add('invalid');
+                    feedback.style.display = 'block'; // Show feedback message
+                } else {
+                    input.classList.remove('invalid');
+                    feedback.style.display = 'none'; // Hide feedback message
+                }
+            };
+
+            // Add input event listeners
+            widthInput.addEventListener('input', () => validateInput(widthInput, MAX_WIDTH, widthFeedback));
+            heightInput.addEventListener('input', () => validateInput(heightInput, MAX_HEIGHT, heightFeedback));
+            sizeInput.addEventListener('input', () => validateInput(sizeInput, MAX_SIZE_KB, sizeFeedback));
+        });
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Photo Upload & Resize</h1>
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <!-- File Input -->
+            <label for="photo">Select Photo:</label><br>
+            <input type="file" name="photo" id="photo" required><br><br>
+
+            <!-- Width Input -->
+            <label for="width">Width (px):</label><br>
+            <input type="number" name="width" id="width" placeholder="Enter width (Max: 1920)" required>
+            <div id="width-feedback" class="feedback">Width cannot exceed 1920 pixels.</div><br>
+
+            <!-- Height Input -->
+            <label for="height">Height (px):</label><br>
+            <input type="number" name="height" id="height" placeholder="Enter height (Max: 1080)" required>
+            <div id="height-feedback" class="feedback">Height cannot exceed 1080 pixels.</div><br>
+
+            <!-- Target Size Input -->
+            <label for="target_size">Target Size (KB):</label><br>
+            <input type="number" name="target_size" id="target_size" placeholder="Enter size in KB (Max: 2000)" required>
+            <div id="size-feedback" class="feedback">Target size cannot exceed 2000 KB.</div><br>
+
+            <!-- Size Unit Selector -->
+            <label for="size_unit">Size Unit:</label><br>
+            <select name="size_unit" id="size_unit" required>
+                <option value="kb">KB</option>
+                <option value="mb">MB</option>
+            </select><br><br>
+
+            <!-- Submit Button -->
+            <button type="submit">Upload and Resize</button>
+        </form>
+    </div>
+</body>
+</html>
